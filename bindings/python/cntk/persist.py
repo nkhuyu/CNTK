@@ -6,9 +6,8 @@
 import numpy as np
 from cntk import cntk_py
 from .utils.swig_helper import typemap
-from cntk.device import use_default_device
 
-def save_model(root_op, filename, use_legacy_format=True):
+def save_as_legacy_model(root_op, filename):
     '''
     Save the network of ``root_op`` in ``filename``.
 
@@ -18,22 +17,4 @@ def save_model(root_op, filename, use_legacy_format=True):
         use_legacy_format (str): if 'True', model is stored using legacy format.
              Otherwise, it's stored using protobuf-based protocol serialization.
     '''
-    root_op.save_model(filename, use_legacy_format)
-
-@typemap
-def load_model(filename, device=None):
-    '''
-    Load the network in ``filename``, that has been saved using
-    `:func:save_model`.
-
-    Args:
-        filename (str): filename to load the model from
-        device (:class:`~cntk.DeviceDescriptor`, default is the default device):
-         instance of DeviceDescriptor
-
-    Returns:
-        root node
-    '''
-    if not device:
-        device = use_default_device()
-    return cntk_py.Function.load_model(filename, device)
+    cntk_py.save_as_legacy_model(root_op, filename)
